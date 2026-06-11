@@ -4,6 +4,11 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from app.routers import auth, urls, health
+from app.database import Base, engine
+from app.models import user, url  # noqa — must import so Base sees them
+
+# Creates all tables if they don't exist
+Base.metadata.create_all(bind=engine)
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
 
